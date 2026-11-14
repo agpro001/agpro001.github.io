@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website B</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000000;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        #cinematic-intro {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, #1a0b2e 0%, #000000 100%);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+
+        #cinematic-intro.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .intro-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: 0.45rem;
+            text-transform: uppercase;
+            text-shadow: 0 0 25px rgba(255, 0, 128, 0.6);
+            opacity: 0;
+            animation: titleReveal 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .intro-line {
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff0080, transparent);
+            margin-top: 16px;
+            animation: lineExpand 1.5s ease 0.5s forwards;
+        }
+
+        @keyframes titleReveal {
+            0% { opacity: 0; transform: scale(0.92); letter-spacing: 0.7rem; }
+            100% { opacity: 1; transform: scale(1); letter-spacing: 0.45rem; }
+        }
+
+        @keyframes lineExpand {
+            0% { width: 0; opacity: 0; }
+            100% { width: 180px; opacity: 1; }
+        }
+
+        #portal-frame {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: calc(100vh + 55px);
+            border: none;
+            z-index: 1;
+            background-color: #000000;
+        }
+
+        .control-dock {
+            position: fixed;
+            top: 14px;
+            right: 14px;
+            z-index: 9999;
+            display: flex;
+            gap: 8px;
+            padding: 6px 10px;
+            background: rgba(10, 10, 10, 0.65);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            opacity: 0.35;
+            transition: opacity 0.3s ease;
+        }
+
+        .control-dock:hover {
+            opacity: 1;
+        }
+
+        .nav-btn {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.8);
+            border: none;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .nav-btn.active {
+            background: #ffffff;
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+    <div id="cinematic-intro">
+        <div class="intro-title">WEBSITE B</div>
+        <div class="intro-line"></div>
+    </div>
+
+    <iframe
+        id="portal-frame"
+        src="https://www.lemon-web.net/html5games/grandtheftautovicecity/dist/"
+        title="Portal View"
+        allow="autoplay; fullscreen; gamepad; pointer-lock; keyboard-map">
+    </iframe>
+
+    <div class="control-dock" id="button-bar">
+        <button class="nav-btn active" onclick="switchSite('https://www.lemon-web.net/html5games/grandtheftautovicecity/dist/', this)">Screen 1</button>
+    </div>
+
+    <script>
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('cinematic-intro').classList.add('hidden');
+            }, 2800);
+        });
+
+        function switchSite(url, clickedBtn) {
+            const frame = document.getElementById('portal-frame');
+            frame.src = url;
+
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            clickedBtn.classList.add('active');
+        }
+    </script>
+</body>
+</html>
