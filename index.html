@@ -19,6 +19,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
+        /* 1. CINEMATIC INTRO OVERLAY */
         #cinematic-intro {
             position: fixed;
             inset: 0;
@@ -44,7 +45,6 @@
             letter-spacing: 0.45rem;
             text-transform: uppercase;
             text-shadow: 0 0 25px rgba(255, 0, 128, 0.6);
-            opacity: 0;
             animation: titleReveal 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
@@ -66,17 +66,20 @@
             100% { width: 180px; opacity: 1; }
         }
 
+        /* 2. FULL-SCREEN CROPPED IFRAME */
         #portal-frame {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
+            /* Hides bottom 55px off-screen */
             height: calc(100vh + 55px);
             border: none;
             z-index: 1;
             background-color: #000000;
         }
 
+        /* 3. FLOATING SWITCHER BUTTONS */
         .control-dock {
             position: fixed;
             top: 14px;
@@ -122,36 +125,46 @@
     </style>
 </head>
 <body>
+
+    <!-- Cinematic Intro -->
     <div id="cinematic-intro">
         <div class="intro-title">WEBSITE B</div>
         <div class="intro-line"></div>
     </div>
 
-    <iframe
-        id="portal-frame"
-        src="https://www.lemon-web.net/html5games/grandtheftautovicecity/dist/"
+    <!-- Main Full-Screen Frame -->
+    <iframe 
+        id="portal-frame" 
         title="Portal View"
         allow="autoplay; fullscreen; gamepad; pointer-lock; keyboard-map">
     </iframe>
 
-    <div class="control-dock" id="button-bar">
-        <button class="nav-btn active" onclick="switchSite('https://www.lemon-web.net/html5games/grandtheftautovicecity/dist/', this)">Screen 1</button>
+    <!-- Floating Switcher Dock -->
+    <div class="control-dock">
+        <button class="nav-btn active" onclick="switchSite('https://lemon-web.net', this)">Screen 1</button>
     </div>
 
     <script>
+        const PROXY_URL = "https://workers.dev";
+
+        function switchSite(targetUrl, clickedBtn) {
+            const frame = document.getElementById('portal-frame');
+            frame.src = PROXY_URL + encodeURIComponent(targetUrl);
+
+            if (clickedBtn) {
+                document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+                clickedBtn.classList.add('active');
+            }
+        }
+
+        // Start loading Screen 1 through your Cloudflare Worker immediately
         window.addEventListener('load', () => {
+            switchSite('https://lemon-web.net');
             setTimeout(() => {
                 document.getElementById('cinematic-intro').classList.add('hidden');
             }, 2800);
         });
-
-        function switchSite(url, clickedBtn) {
-            const frame = document.getElementById('portal-frame');
-            frame.src = url;
-
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            clickedBtn.classList.add('active');
-        }
     </script>
+
 </body>
 </html>
